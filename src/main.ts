@@ -3,13 +3,16 @@ import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { checkHeaderMiddleware } from "./middlewares/checkHeaderMiddleware";
 import { AuthGuard } from "./guards/auth.guard";
+import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({}));
-
-  // global middleware
   app.use(checkHeaderMiddleware);
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.enableCors({
+    allowedHeaders: "*"
+  })
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

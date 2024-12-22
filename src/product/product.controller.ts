@@ -16,6 +16,7 @@ import {
   Req,
   UseFilters,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from "@nestjs/common";
 import { Product } from "./entities/product.entity";
@@ -29,6 +30,9 @@ import { IncrementOnePipe } from "src/pipes/my-validation.pipe";
 import { AuthGuard } from "src/guards/auth.guard";
 import { Roles } from "src/decorators/roles.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
+import { ExcludeNullInterceptor } from "src/interceptors/exclude-null.interceptor";
+import { Cacheable } from "src/decorators/cache-key.decorator";
+import { CacheInterceptor } from "src/interceptors/cache.interceptor";
 
 @Controller("product")
 @UseFilters(HttpExceptionFilter)
@@ -36,6 +40,22 @@ import { RolesGuard } from "src/guards/roles.guard";
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Get("getCache")
+  // @Cacheable("some-key")
+  @UseInterceptors(CacheInterceptor)
+  async getChache() {
+    return "not cached value";
+  }
+
+  @Get("getmap")
+  @UseInterceptors(ExcludeNullInterceptor)
+  async getMap() {
+    return {
+      "hello": "world",
+      "testKey1": null,
+      "testKey2": "value 2"
+    }
+  }
   @Get("findone/:id")
   @Roles(["admin"])
   async getOneProd(@Param("id", new ParseIntPipe({
