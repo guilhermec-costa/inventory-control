@@ -27,13 +27,17 @@ import { ForbiddenException } from "src/exceptions/forbidden.exception";
 import { HttpExceptionFilter } from "src/exceptions/http-exception.filter";
 import { IncrementOnePipe } from "src/pipes/my-validation.pipe";
 import { AuthGuard } from "src/guards/auth.guard";
+import { Roles } from "src/decorators/roles.decorator";
+import { RolesGuard } from "src/guards/roles.guard";
 
 @Controller("product")
 @UseFilters(HttpExceptionFilter)
+@UseGuards(RolesGuard)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get("findone/:id")
+  @Roles(["admin"])
   async getOneProd(@Param("id", new ParseIntPipe({
     errorHttpStatusCode: HttpStatus.INTERNAL_SERVER_ERROR
   })) id: number) {
