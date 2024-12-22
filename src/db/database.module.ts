@@ -1,4 +1,4 @@
-import { Global, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { EEnv } from "src/types/EEnv";
@@ -22,4 +22,5 @@ import { EEnv } from "src/types/EEnv";
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+}

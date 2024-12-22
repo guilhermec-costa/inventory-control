@@ -7,6 +7,7 @@ import { CreateProductResponseDTO } from './dto/create-product-response.dto';
 import { HttpService } from '../http/http.service';
 import { ClientA } from 'src/http/clients/ClientA';
 import { ClientB } from 'src/http/clients/ClientB';
+import { UserService } from 'src/user/user.service';
 
 @Injectable({
   scope: Scope.DEFAULT 
@@ -17,11 +18,15 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
 
     @Inject("HTTP_OPTIONS_A")
-    private readonly httpService: HttpService<ClientA>
+    private readonly httpService: HttpService<ClientA>,
+    
+    private readonly userService: UserService
   ) {}
 
   public async test(): Promise<void> {
-    await this.httpService.get("test-route");
+    let resp = await this.httpService.get("/todos/1");
+    console.log(this.userService.test());
+    console.log(resp.data);
   }
 
   public async findAll(): Promise<Product[]> {
